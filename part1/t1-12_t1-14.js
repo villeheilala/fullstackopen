@@ -1,5 +1,5 @@
 // fullstackopen @villeheilala
-// Tehtävät 1.12-1.14
+// Part 1 Assignments 1.12-1.14
 
 import React from 'react';
 import ReactDOM from 'react-dom';
