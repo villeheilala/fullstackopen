@@ -3,6 +3,7 @@
 // Ville Heilala
 
 import React from 'react';
+import axios from 'axios';
 
 const Person = ({ name, phone }) => (
 	<tr>
@@ -24,16 +25,19 @@ class App extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			persons: [
-				{ name: 'Arto Hellas', phone: '040-123456' },
-				{ name: 'Martti Tienari', phone: '040-123456' },
-				{ name: 'Arto Järvinen', phone: '040-123456' },
-				{ name: 'Lea Kutvonen', phone: '040-123456' }
-			],
+			persons: [],
 			newName: "",
 			newPhone: "",
 			filter: ""
 		}
+	}
+
+	componentDidMount() {
+		axios
+			.get("http://localhost:3001/persons")
+			.then(response => {
+				this.setState({ persons: response.data })
+			})
 	}
 
 	addPerson = (event) => {
