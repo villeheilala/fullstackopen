@@ -4,6 +4,7 @@
 
 import React from 'react';
 import axios from 'axios';
+import personService from './services/persons'
 
 const Person = ({ name, phone }) => (
 	<tr>
@@ -33,10 +34,10 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
-		axios
-			.get("http://localhost:3001/persons")
+		personService
+			.getAll()
 			.then(response => {
-				this.setState({ persons: response.data })
+				this.setState({ persons: response })
 			})
 	}
 
@@ -49,12 +50,16 @@ class App extends React.Component {
 				name: this.state.newName,
 				phone: this.state.newPhone
 			}
-			const persons = this.state.persons.concat(personObject)
-			this.setState({
-				persons,
-				newName: "",
-				newPhone: ""
-			})
+
+			personService
+				.create(personObject)
+				.then(newPerson => {
+					this.setState({
+						persons: this.state.persons.concat(newPerson),
+						newName: '',
+						newPhone: ''
+					})
+				})
 		}
 	}
 
