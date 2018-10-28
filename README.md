@@ -16,5 +16,6 @@
 ## Part 2 assignmets
 
 * [2.1-2.5](/part2/t2-1_t2-5)
-* [2.6-2.11](part2/puhluettelo)
+* [2.6-2.11](part2/puhluettelo/src)
 * [2.12-2.13](part2/maiden-tiedot/src)
+* [2.14-2.19](part2/puhluettelo/src)

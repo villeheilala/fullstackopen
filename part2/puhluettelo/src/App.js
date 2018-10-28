@@ -1,9 +1,10 @@
 // fullstackopen 2018
-// ex. 2.6-2.11
+// ex. 2.6-2.19
 // Ville Heilala
 
 import React from 'react';
 import personService from './services/persons'
+import './index.css'
 
 const Person = ({ name, phone, id, deletePerson }) => (
 	<tr>
@@ -15,12 +16,23 @@ const Person = ({ name, phone, id, deletePerson }) => (
 
 const Filter = ({ value, onChange }) => (
 	<div>
-		hakuehto: <input
+		Find: <input
 			value = { value }
 			onChange = { onChange }
 		/>
 	</div>
 )
+
+const Notification = ({ type, text }) => {
+	if (text === null) {
+		return null
+	}
+	return (
+		<div className={type}>
+			{text}
+		</div>
+	)
+}
 
 class App extends React.Component {
 	constructor(props) {
@@ -29,7 +41,11 @@ class App extends React.Component {
 			persons: [],
 			newName: "",
 			newPhone: "",
-			filter: ""
+			filter: "",
+			message: {
+				type: null,
+				text: null
+			}
 		}
 	}
 
@@ -52,8 +68,37 @@ class App extends React.Component {
 					.update(personObject.id, personObject)
 					.then(changedPerson => {
 						this.setState({
-							persons: this.state.persons.map(person => person.id !== changedPerson.id ? person : changedPerson)
+							persons: this.state.persons.map(person => person.id !== changedPerson.id ? person : changedPerson),
+							message: {
+								type: "info",
+								text: `Person ${changedPerson.name} phone number changed.`
+							}
 						})
+						setTimeout(() => {
+							this.setState({
+								message: {
+									type: null,
+									text: null
+								}
+							})
+						}, 5000)
+					})
+					.catch(error => {
+						this.setState({
+							message: {
+								type: "error",
+								text: `Person ${personObject.name} is already deleted.`
+							},
+							persons: this.state.persons.filter(person => person.id !== personObject.id)
+						})
+						setTimeout(() => {
+							this.setState({
+								message: {
+									type: null,
+									text: null
+								}
+							})
+						}, 5000)
 					})
 		}
 			// in case of new person, create new person
@@ -71,6 +116,22 @@ class App extends React.Component {
 						newPhone: ''
 					})
 				})
+				.then(() => {
+					this.setState({
+						message: {
+							type: "info",
+							text: `New person ${personObject.name} added.`
+						}
+					})
+					setTimeout(() => {
+						this.setState({
+							message: {
+								type: null,
+								text: null
+							}
+						})
+					}, 5000)
+				})
 		}
 	}
 
@@ -82,8 +143,20 @@ class App extends React.Component {
 					.then(deletedPerson => {
 						const persons = this.state.persons.filter(person => person.id !== id)
 						this.setState({
-							persons
+							persons,
+							message: {
+								type: "info",
+								text: `Deleted person ${name}.`
+							}
 						})
+						setTimeout(() => {
+							this.setState({
+								message: {
+									type: null,
+									text: null
+								}
+							})
+						}, 5000)
 					})
 			}
 		}
@@ -105,17 +178,18 @@ class App extends React.Component {
 		return (
 			<div>
 				<h1>Puhelinluettelo</h1>
+				<Notification type={this.state.message.type} text={this.state.message.text} />
 				<Filter value={this.state.filter} onChange={this.handleFilterChange} />
 				<h2>Lisää uusi</h2>
 				<form onSubmit={this.addPerson}>
 					<div>
-						nimi: <input
+						Name: <input
 							value={this.state.newName}
 							onChange={this.handleNameChange}
 						/>
 					</div>
 					<div>
-						numero: <input
+						Phone: <input
 							value={this.state.newPhone}
 							onChange={this.handlePhoneChange}
 						/>
