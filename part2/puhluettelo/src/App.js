@@ -3,13 +3,13 @@
 // Ville Heilala
 
 import React from 'react';
-import axios from 'axios';
 import personService from './services/persons'
 
-const Person = ({ name, phone }) => (
+const Person = ({ name, phone, id, deletePerson }) => (
 	<tr>
 		<td>{ name }</td>
 		<td>{ phone }</td>
+		<td><button id={ id } onClick={deletePerson}>delete</button></td>
 	</tr>
 )
 
@@ -43,14 +43,25 @@ class App extends React.Component {
 
 	addPerson = (event) => {
 		event.preventDefault()
-		if (this.state.persons.some(person => person.name.toLowerCase() === this.state.newName.toLowerCase())) {
-			alert("Henkilön tiedot ovat jo luettelossa!")
+		// if name exists, ask and update phone number
+		const personObject = this.state.persons.find(person => person.name.toLowerCase() === this.state.newName.toLowerCase())
+		if (personObject) {
+			if (window.confirm(this.state.newName + " exists. Replace phone number?")) {
+				personObject["phone"] = this.state.newPhone
+				personService
+					.update(personObject.id, personObject)
+					.then(changedPerson => {
+						this.setState({
+							persons: this.state.persons.map(person => person.id !== changedPerson.id ? person : changedPerson)
+						})
+					})
+		}
+			// in case of new person, create new person
 		} else {
 			const personObject = {
 				name: this.state.newName,
 				phone: this.state.newPhone
 			}
-
 			personService
 				.create(personObject)
 				.then(newPerson => {
@@ -60,6 +71,21 @@ class App extends React.Component {
 						newPhone: ''
 					})
 				})
+		}
+	}
+
+	deletePerson = (id, name) => {
+		return () => {
+			if (window.confirm(`Delete ${name} ?`)) {
+				personService
+					.deletePerson(id)
+					.then(deletedPerson => {
+						const persons = this.state.persons.filter(person => person.id !== id)
+						this.setState({
+							persons
+						})
+					})
+			}
 		}
 	}
 
@@ -103,7 +129,13 @@ class App extends React.Component {
 					<tbody>
 						{this.state.persons
 								.filter(person => person.name.toLowerCase().includes(this.state.filter.toLowerCase()))
-								.map(person => <Person key={person.name} name={person.name}phone={person.phone} />)
+								.map(person => <Person 
+									key={person.name}
+									name={person.name}
+									phone={person.phone} 
+									id={person.id}
+									deletePerson={this.deletePerson(person.id, person.name)}
+								/>)
 						}
 					</tbody>
 				</table>
