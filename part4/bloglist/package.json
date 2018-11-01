@@ -6,7 +6,7 @@
 	"scripts": {
 		"watch": "nodemon index.js",
 		"start": "node index.js",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "jest --verbose"
 	},
 	"author": "Ville Heilala",
 	"license": "MIT",
@@ -18,6 +18,10 @@
 		"mongoose": "^5.3.8"
 	},
 	"devDependencies": {
+		"jest": "^23.6.0",
 		"nodemon": "^1.18.5"
+	},
+	"jest": {
+		"testEnvironment": "node"
 	}
 }
