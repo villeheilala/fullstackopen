@@ -10,7 +10,6 @@ const favoriteBlog = (blogs) => {
 	return blogs.reduce((favoriteBlog, blog) => favoriteBlog.likes > blog.likes ? favoriteBlog : blog, {})
 }
 
-
 const mostBlogs = (blogs) => {
 	const counts = blogs.map(blog => blog["author"]).reduce( (acc, cur) => (acc[cur] = ++acc[cur] || 1, acc), {} )
 	const mostValue = Math.max(...Object.values(counts))

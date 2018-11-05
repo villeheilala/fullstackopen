@@ -4,9 +4,9 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"watch": "nodemon index.js",
-		"start": "node index.js",
-		"test": "jest --verbose"
+		"watch": "NODE_ENV=development nodemon index.js",
+		"start": "NODE_ENV=production node index.js",
+		"test": "NODE_ENV=test jest --verbose"
 	},
 	"author": "Ville Heilala",
 	"license": "MIT",
@@ -19,7 +19,8 @@
 	},
 	"devDependencies": {
 		"jest": "^23.6.0",
-		"nodemon": "^1.18.5"
+		"nodemon": "^1.18.5",
+		"supertest": "^3.3.0"
 	},
 	"jest": {
 		"testEnvironment": "node"

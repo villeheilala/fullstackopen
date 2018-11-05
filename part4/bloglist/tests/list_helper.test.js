@@ -72,7 +72,7 @@ const listWithManyBlogs = [
 	}
 ]
 
-describe('total likes', () => {
+describe.skip('total likes', () => {
 
 	test('When list has zero blogs the likes equals to zero', () => {
 		expect(listHelper.totalLikes(listWithZeroBlogs)).toBe(0)
@@ -88,7 +88,7 @@ describe('total likes', () => {
 })
 
 
-describe('favorite blog', () => {
+describe.skip('favorite blog', () => {
 
 	test('The favorite blog of an empty blog list is emtpy object', () => {
 		expect(listHelper.favoriteBlog([])).toEqual({})
@@ -100,7 +100,7 @@ describe('favorite blog', () => {
 
 })
 
-describe('most blogs', () => {
+describe.skip('most blogs', () => {
 
 	test('The most blogs writer is a writer who has most blogs in a bloglist', () => {
 		expect(listHelper.mostBlogs(listWithManyBlogs.slice(0, -1))).toEqual({ author: ["Robert C. Martin"], blogs: 3 })
@@ -112,7 +112,7 @@ describe('most blogs', () => {
 
 })
 
-describe('most likes', () => {
+describe.skip('most likes', () => {
 
 	test('Author which has most likes', () => {
 		expect(listHelper.mostLikes(listWithManyBlogs)).toEqual( {"author": ["Edsger W. Dijkstra"], "likes": 22} )
