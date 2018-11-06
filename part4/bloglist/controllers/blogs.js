@@ -23,7 +23,7 @@ blogsRouter.post('/', async (request, response) => {
 	try {
 		const body = request.body
 
-		if ((body.title || body.author || body.url) === undefined) {
+		if (body.title === undefined || body.author === undefined || body.url === undefined) {
 			return response.status(400).json({ error: 'Bad request: title is  missing.' })
 		}
 

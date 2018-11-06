@@ -126,6 +126,32 @@ describe('POST tests', () => {
 		expect(response.body.likes).toBe(0)
 	})
 
+	test('Title, url and author needs to be set', async () => {
+		await api
+			.post('/api/blogs')
+			.send({
+				author: 'John Snow',
+				url: 'https://www.winterfell.org/snow'
+			})
+			.expect(400)
+
+		await api
+			.post('/api/blogs')
+			.send({
+				title: 'Winter has come',
+				url: 'https://www.winterfell.org/snow'
+			})
+			.expect(400)
+		
+		await api
+			.post('/api/blogs')
+			.send({
+				title: 'Winter has come',
+				author: 'John Snow',
+			})
+			.expect(400)
+	})
+
 })
 
 afterAll(() => {
