@@ -19,6 +19,19 @@ blogsRouter.get('/', (request, response) => {
 		})
 })
 
+blogsRouter.get('/:id', async (request, response) => {
+	try {
+		const foundBlog = await Blog.findById(request.params.id)
+		if (foundBlog) {
+			return response.status(200).json(formatBlog(foundBlog))
+		} else {
+			return response.status(404)
+		}
+	} catch (exception) {
+		response.status(400).json({ error: 'Bad request' })
+	}
+})
+
 blogsRouter.post('/', async (request, response) => {
 	try {
 		const body = request.body
