@@ -63,25 +63,69 @@ beforeAll(async () => {
 	}
 })
 
-test('Blogs are returned as json', async () => {
-	await api
-		.get('/api/blogs')
-		.expect(200)
-		.expect('Content-Type', /application\/json/)
+
+describe('GET tests', () => {
+	test('Blogs are returned as json', async () => {
+		await api
+			.get('/api/blogs')
+			.expect(200)
+			.expect('Content-Type', /application\/json/)
+	})
+
+	test('There are six blogs', async () => {
+		const response = await api
+			.get('/api/blogs')
+
+		expect(response.body.length).toBe(initialBlogs.length)
+	})
+
+	test('A specific blog title is within the returned blogs', async () => {
+		const response = await api
+			.get('/api/blogs')
+
+		expect(response.body.map(r => r.title)).toContain('Type wars')
+	})
 })
 
-test('There are six blogs', async () => {
-	const response = await api
-		.get('/api/blogs')
+describe('POST tests', () => {
 
-	expect(response.body.length).toBe(initialBlogs.length)
-})
+	test('Posted blog is saved and returned as json', async () => {
+		const newBlog = {
+			title: "Winter has come",
+			author: "John Snow",
+			url: "https://www.winterfell.org/snow",
+			likes: 12000
+		}
+		
+		const response = await api
+			.post('/api/blogs')
+			.send(newBlog)
+			.expect(201)
+			.expect('Content-Type', /application\/json/)
 
-test('A specific blog title is within the returned blogs', async () => {
-	const response = await api
-		.get('/api/blogs')
+		delete response.body.id
+		expect(response.body).toEqual(newBlog)
+	})
 
-	expect(response.body.map(r => r.title)).toContain('Type wars')
+	test('Collection length is increased by one', async () => {
+		const response = await api.get('/api/blogs/')
+		
+		expect(response.body.length).toBe(initialBlogs.length + 1)
+	})
+
+	test('Set likes to 0 when likes is not set', async () => {
+		const response = await api
+			.post('/api/blogs')
+			.send({
+				title: "Winter has come",
+				author: "John Snow",
+				url: "https://www.winterfell.org/snow"
+			})
+			.expect(201)
+		
+		expect(response.body.likes).toBe(0)
+	})
+
 })
 
 afterAll(() => {
