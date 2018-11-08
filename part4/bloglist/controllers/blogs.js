@@ -22,13 +22,13 @@ blogsRouter.get('/', (request, response) => {
 blogsRouter.get('/:id', async (request, response) => {
 	try {
 		const foundBlog = await Blog.findById(request.params.id)
-		if (foundBlog) {
-			return response.status(200).json(formatBlog(foundBlog))
+		if (foundBlog || foundBlog !== undefined) {
+			response.status(200).json(formatBlog(foundBlog))
 		} else {
-			return response.status(404)
+			response.status(404).end()
 		}
 	} catch (exception) {
-		response.status(400).json({ error: 'Bad request' })
+		return response.status(400).json({ error: 'Bad request' })
 	}
 })
 
@@ -52,6 +52,20 @@ blogsRouter.post('/', async (request, response) => {
 	} catch (exception) {
 		console.log(exception)
 		response.status(500).json({ error: 'error happened...' })
+	}
+})
+
+blogsRouter.delete('/:id', async (request, response) => {
+	try {
+		const deletedBlog = await Blog.findOneAndDelete({ _id: request.params.id })
+		console.log(deletedBlog)
+		if (deletedBlog) {
+			response.status(204).end()
+		} else {
+			response.status(404).end()
+		}
+	} catch (exception) {
+		return response.status(500).json({ error: 'error happened...' })
 	}
 })
 
