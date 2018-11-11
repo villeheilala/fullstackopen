@@ -1,29 +1,29 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
-const formatBlog = (blog) => {
-	return {
-		id: blog._id,
-		title: blog.title,
-		author: blog.author,
-		url: blog.url,
-		likes: blog.likes
-	}
-}
+//const formatBlog = (blog) => {
+//return {
+//	id: blog._id,
+//	title: blog.title,
+//	author: blog.author,
+//	url: blog.url,
+//	likes: blog.likes
+//}
+//}
 
-blogsRouter.get('/', (request, response) => {
-	Blog
+blogsRouter.get('/', async (request, response) => {
+	const blogs = await Blog
 		.find({})
-		.then(blogs => {
-			response.json(blogs)
-		})
+		.populate('user', { username: 1, name: 1 })
+	response.json(blogs.map(Blog.format))
 })
 
 blogsRouter.get('/:id', async (request, response) => {
 	try {
 		const foundBlog = await Blog.findById(request.params.id)
 		if (foundBlog || foundBlog !== undefined) {
-			response.status(200).json(formatBlog(foundBlog))
+			response.status(200).json(Blog.format(foundBlog))
 		} else {
 			response.status(404).end()
 		}
@@ -40,15 +40,23 @@ blogsRouter.post('/', async (request, response) => {
 			return response.status(400).json({ error: 'Bad request: title is  missing.' })
 		}
 
+		const user = await User.findById(body.userId)
+
 		const blog = new Blog({
 			title: body.title,
 			author: body.author,
 			url: body.url,
-			likes: body.likes || 0
+			likes: body.likes || 0,
+			user: user._id
 		})
 
 		const savedBlog = await blog.save()
-		response.status(201).json(formatBlog(savedBlog))
+
+		user.blogs = user.blogs.concat(savedBlog._id)
+		await user.save()
+		
+		response.status(201).json(Blog.format(savedBlog))
+
 	} catch (exception) {
 		console.log(exception)
 		response.status(500).json({ error: 'error happened...' })
@@ -82,7 +90,7 @@ blogsRouter.put('/:id', async (request, response) => {
 		}
 		
 		const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
-		response.json(updatedBlog)
+		response.json(Blog.format(updatedBlog))
 
 	} catch (exception) {
 		console.log(exception)
