@@ -2,7 +2,8 @@ const supertest = require('supertest')
 const {app, server} = require('../index')
 const api = supertest(app)
 const Blog = require('../models/blog')
-const { format, initialBlogs, blogsInDb } = require('./test_helper')
+const User = require('../models/user')
+const {format, initialBlogs, blogsInDb, initialUsers} = require('./test_helper')
 
 describe('When there is initially some blogs saved', async () => {
 
@@ -13,8 +14,14 @@ describe('When there is initially some blogs saved', async () => {
 			let blogObject = new Blog(blog)
 			await blogObject.save()
 		}
-	})
+		
+		await User.remove({})
 
+		for (let user of initialUsers) {
+			let userObject = new User(user)
+			await userObject.save()
+		}
+	})
 
 	test('All blogs are returned as json by GET /api/blogs', async () => {
 		const blogsInDatabase = await blogsInDb()
@@ -120,6 +127,64 @@ describe('When there is initially some blogs saved', async () => {
 		})
 
 
+	})
+
+})
+
+describe.only('When there are some users already in the database', async () => {
+
+	test('Password must be at least 3 characters', async () => {
+		const newUser = {
+			username: 'sam.short',
+			name: 'Sam Short',
+			password: 'aaa',
+			adult: true
+		}
+		
+		const response = await api
+			.post('/api/users')
+			.send(newUser)
+			.expect(400)
+			.expect('Content-Type', /application\/json/)
+
+		expect(response.body.error).toEqual('Password too short')
+	})
+
+	test('Must not accept duplicate username', async () => {
+		const newUser = {
+			username: 'mikko.mallikas',
+			name: 'Duplicate Username',
+			password: 'aaaaaaa',
+			adult: true
+		}
+
+		const response = await api
+			.post('/api/users/')
+			.send(newUser)
+			.expect(400)
+			.expect('Content-Type', /application\/json/)
+
+		expect(response.body.error).toEqual('Duplicate username')
+	})
+
+	test('If adult value missing, set true as default', async () => {
+		const newUser = {
+			username: 'aino.aikuinen',
+			name: 'Adult Value Missing',
+			password: 'aaaaaaa'
+		}
+
+		const response = await api
+			.post('/api/users')
+			.send(newUser)
+			.expect(200)
+			.expect('Content-Type', /application\/json/)
+
+		delete newUser.password
+		delete response.body.id
+		newUser.adult = true
+
+		expect(response.body).toEqual(newUser)
 	})
 
 	afterAll(() => {

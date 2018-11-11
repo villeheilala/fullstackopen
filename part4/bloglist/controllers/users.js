@@ -6,8 +6,17 @@ usersRouter.post('/', async (request, response) => {
 	try {
 		const body = request.body
 		
-		if (body.username === undefined || body.password === undefined) {
+		if (body.username === null || body.password === null) {
 			return response.status(400).json({ error: 'Username and/or password missing.'})
+		}
+
+		const existingUser = await User.find({ username: body.username })
+		if (existingUser.length > 0) {
+			return response.status(400).json({ error: 'Duplicate username' })
+		}
+
+		if (body.password.length < 4) {
+			return response.status(400).json({ error: 'Password too short' })
 		}
 
 		const saltRounds = 10
@@ -17,7 +26,7 @@ usersRouter.post('/', async (request, response) => {
 			username: body.username,
 			name: body.name,
 			passwordHash,
-			adult: body.adult
+			adult: body.adult || true
 		})
 
 		const savedUser = await user.save()

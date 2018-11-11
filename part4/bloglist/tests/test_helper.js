@@ -1,5 +1,20 @@
 const Blog = require('../models/blog')
 
+const initialUsers = [
+	{
+		username: "mikko.mallikas",
+		name: "Mikko Mallikas",
+		password: "salainen",
+		adult: true
+	},
+	{
+		username: "minna.mainio",
+		name: "Minna O. Mainio",
+		password: "sana",
+		adult: false
+	}
+]
+
 const initialBlogs = [
 	{
 		_id: "5a422a851b54a676234d17f7",
@@ -69,5 +84,6 @@ const format = (blog) => {
 module.exports = {
 	initialBlogs,
 	blogsInDb,
-	format
+	format,
+	initialUsers
 }
