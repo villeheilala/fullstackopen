@@ -26,4 +26,4 @@
 
 ## Part 4 Assignments
 
-* [4.1-](part4/bloglist)
+* [4.1-4.21](part4/bloglist)
