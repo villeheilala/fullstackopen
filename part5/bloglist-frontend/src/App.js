@@ -4,6 +4,8 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Message from './components/Message'
+import Togglable from './components/Togglable'
+import NewBlogForm from './components/NewBlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -59,8 +61,11 @@ const App = () => {
     }
   }
 
+  const blogFormRef = React.createRef()
+
   const handleCreate = async (event) => {
     event.preventDefault()
+    blogFormRef.current.toggleVisibility()
     try {
       const newBlog = {
         "title": newBlogTitle,
@@ -109,43 +114,16 @@ const App = () => {
     </form>
   )
 
-  const newBlogForm = () => (
-    <form onSubmit={handleCreate}>
-      <div>
-        Title:
-        <input
-          type="text"
-          value={newBlogTitle}
-          name="newBlogTitle"
-          onChange={({ target }) => setNewBlogTitle(target.value)}
-        />
-      </div>
-      <div>
-        Author:
-        <input
-          type="text"
-          value={newBlogAuthor}
-          name="newBlogAuthor"
-          onChange={({ target }) => setNewBlogAuthor(target.value)}
-        />
-      </div>
-      <div>
-        Url:
-        <input
-          type="text"
-          value={newBlogUrl}
-          name="newBlogUrl"
-          onChange={({ target }) => setNewBlogUrl(target.value)}
-        />
-      </div>
-      <button type="submit">Create</button>
-    </form >
-  )
-
   const logOut = () => {
     window.localStorage.removeItem('loggedBloglistUser')
     window.location.reload()
   }
+
+  const sortLikes = (asc = true) => () => (
+    asc ?
+    setBlogs(blogs.sort((a, b) => a.likes - b.likes)) :
+    setBlogs(blogs.sort((a, b) => b.likes - a.likes))
+  )
 
   if (user === null) {
     return (
@@ -162,9 +140,24 @@ const App = () => {
       <h2>Bloglist</h2>
       <Message text={message.text} type={message.type} />
       <p>{user.name} logged in <button onClick={logOut}>Logout</button></p>
-      {newBlogForm()}
+      <p>
+        Sort by:
+        <button onClick={sortLikes()}>Likes (asc)</button>
+        <button onClick={sortLikes(false)}>Likes (desc)</button>
+      </p>
+      <Togglable buttonLabel="Add note" ref={blogFormRef}>
+      <NewBlogForm
+        newBlogTitle={newBlogTitle}
+        newBlogAuthor={newBlogAuthor}
+        newBlogUrl={newBlogUrl}
+        handleNewTitleChange={({ target }) => setNewBlogTitle(target.value)}
+        handleNewAuthorChange={({ target }) => setNewBlogAuthor(target.value)}
+        handleNewUrlChange={({ target }) => setNewBlogUrl(target.value)}
+        handleSubmit={handleCreate}
+      />
+      </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} setBlogs={setBlogs} user={user}/>
       )}
     </div>
   )
