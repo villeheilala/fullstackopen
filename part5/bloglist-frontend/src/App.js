@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // fullstackopen 2019 course work 5.1-5.4
 // ville heilala
 
@@ -51,8 +52,8 @@ const App = () => {
         setPassword('')
       } catch (exception) {
         setMessage({
-          text: "Log in error",
-          type: "warning"
+          text: 'Log in error',
+          type: 'warning'
         })
       }
       setTimeout(() => {
@@ -66,35 +67,33 @@ const App = () => {
   const handleCreate = async (event) => {
     event.preventDefault()
     blogFormRef.current.toggleVisibility()
-    try {
-      const newBlog = {
-        "title": newBlogTitle,
-        "author": newBlogAuthor,
-        "url": newBlogUrl
-      }
 
-      const savedBlog = await blogService.create(newBlog)
-
-      setBlogs([...blogs, savedBlog])
-      setNewBlogAuthor('')
-      setNewBlogTitle('')
-      setNewBlogUrl('')
-
-      setMessage({ text: "New blog added" })
-      setTimeout(() => {
-        setMessage({})
-      }, 5000)
-
-    } catch (exception) {
-      console.log(exception)
+    const newBlog = {
+      'title': newBlogTitle,
+      'author': newBlogAuthor,
+      'url': newBlogUrl
     }
+
+    const savedBlog = await blogService.create(newBlog)
+
+    setBlogs([...blogs, savedBlog])
+    setNewBlogAuthor('')
+    setNewBlogTitle('')
+    setNewBlogUrl('')
+
+    setMessage({ text: 'New blog added' })
+    setTimeout(() => {
+      setMessage({})
+    }, 5000)
+
+
   }
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
         Username
-       <input
+        <input
           type="text"
           value={username}
           name="Username"
@@ -103,7 +102,7 @@ const App = () => {
       </div>
       <div>
         Password
-       <input
+        <input
           type="password"
           value={password}
           name="Password"
@@ -121,8 +120,8 @@ const App = () => {
 
   const sortLikes = (asc = true) => () => (
     asc ?
-    setBlogs(blogs.sort((a, b) => a.likes - b.likes)) :
-    setBlogs(blogs.sort((a, b) => b.likes - a.likes))
+      setBlogs(blogs.sort((a, b) => a.likes - b.likes)) :
+      setBlogs(blogs.sort((a, b) => b.likes - a.likes))
   )
 
   if (user === null) {
@@ -146,18 +145,18 @@ const App = () => {
         <button onClick={sortLikes(false)}>Likes (desc)</button>
       </p>
       <Togglable buttonLabel="Add note" ref={blogFormRef}>
-      <NewBlogForm
-        newBlogTitle={newBlogTitle}
-        newBlogAuthor={newBlogAuthor}
-        newBlogUrl={newBlogUrl}
-        handleNewTitleChange={({ target }) => setNewBlogTitle(target.value)}
-        handleNewAuthorChange={({ target }) => setNewBlogAuthor(target.value)}
-        handleNewUrlChange={({ target }) => setNewBlogUrl(target.value)}
-        handleSubmit={handleCreate}
-      />
+        <NewBlogForm
+          newBlogTitle={newBlogTitle}
+          newBlogAuthor={newBlogAuthor}
+          newBlogUrl={newBlogUrl}
+          handleNewTitleChange={({ target }) => setNewBlogTitle(target.value)}
+          handleNewAuthorChange={({ target }) => setNewBlogAuthor(target.value)}
+          handleNewUrlChange={({ target }) => setNewBlogUrl(target.value)}
+          handleSubmit={handleCreate}
+        />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} setBlogs={setBlogs} user={user}/>
+        <Blog key={blog.id} blog={blog} setBlogs={setBlogs} user={user} />
       )}
     </div>
   )

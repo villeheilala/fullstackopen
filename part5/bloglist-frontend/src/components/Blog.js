@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
@@ -42,10 +43,10 @@ const Blog = ({ blog, setBlogs, user }) => {
 
   return (
     <div style={blogStyle}>
-      <div onClick={toggleDetails}>
+      <div className="title" onClick={toggleDetails}>
         {blog.title} ({blog.author})
       </div>
-      <div style={visible}>
+      <div className="details" style={visible}>
         URL: {blog.url}
         <br />Likes: {blog.likes}<button onClick={like}>Like</button>
         <br />Added by {blog.user.name}
