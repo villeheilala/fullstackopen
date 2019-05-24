@@ -6,49 +6,31 @@ const NewBlogForm = ({
   handleSubmit,
   newBlogTitle,
   newBlogAuthor,
-  newBlogUrl,
-  handleNewTitleChange,
-  handleNewAuthorChange,
-  handleNewUrlChange }) => {
+  newBlogUrl }) => {
 
   NewBlogForm.propTypes = {
     handleSubmit: PropTypes.func.isRequired,
-    newBlogTitle: PropTypes.string.isRequired,
-    newBlogAuthor: PropTypes.string.isRequired,
-    newBlogUrl: PropTypes.string.isRequired,
-    handleNewTitleChange: PropTypes.func.isRequired,
-    handleNewAuthorChange: PropTypes.func.isRequired,
-    handleNewUrlChange: PropTypes.func.isRequired
+    newBlogTitle: PropTypes.object.isRequired,
+    newBlogAuthor: PropTypes.object.isRequired,
+    newBlogUrl: PropTypes.object.isRequired,
+    //handleNewTitleChange: PropTypes.func.isRequired,
+    //handleNewAuthorChange: PropTypes.func.isRequired,
+    //handleNewUrlChange: PropTypes.func.isRequired
   }
 
   return (
     <form onSubmit={handleSubmit}>
       <div>
         Title:
-        <input
-          type="text"
-          value={newBlogTitle}
-          name="newBlogTitle"
-          onChange={handleNewTitleChange}
-        />
+        <input {...newBlogTitle.bind} />
       </div>
       <div>
         Author:
-        <input
-          type="text"
-          value={newBlogAuthor}
-          name="newBlogAuthor"
-          onChange={handleNewAuthorChange}
-        />
+        <input {...newBlogAuthor.bind}/>
       </div>
       <div>
         Url:
-        <input
-          type="text"
-          value={newBlogUrl}
-          name="newBlogUrl"
-          onChange={handleNewUrlChange}
-        />
+        <input {...newBlogUrl.bind}/>
       </div>
       <button type="submit">Create</button>
     </form >
