@@ -27,3 +27,7 @@
 ## Part 4 Assignments
 
 * [4.1-4.21](part4/bloglist)
+
+## Part 5 Assignments
+
+* [5.1-5.21](part5/bloglist-frontend)
