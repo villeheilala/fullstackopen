@@ -42,7 +42,7 @@ const Blog = ({ blog, setBlogs, user }) => {
   const deletable = { display: blog.user.username === user.username ? '' : 'none' }
 
   return (
-    <div style={blogStyle}>
+    <div className="blog" style={blogStyle}>
       <div className="title" onClick={toggleDetails}>
         {blog.title} ({blog.author})
       </div>
