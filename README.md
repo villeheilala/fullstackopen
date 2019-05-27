@@ -31,3 +31,8 @@
 ## Part 5 Assignments
 
 * [5.1-5.21](part5/bloglist-frontend)
+
+## Part 6 Assignments
+
+* [6.1-6.2](part6/unicafe-redux)
+* [6.3-6.21](part6/redux-anecdotes)
