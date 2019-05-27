@@ -1,9 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
 import AnecdoteForm from './components/AnecdoteForm'
 import AnecdoteList from './components/AnecdoteList'
 import Notification from './components/Notification'
+import { initializeAnecdotes } from './reducers/anecdoteReducer'
 
 const App = (props) => {
+
+  useEffect(() => {
+    props.initializeAnecdotes()
+  }, [])
   return (
     <div>
       <h1>Programming anecdotes</h1>
@@ -14,4 +20,4 @@ const App = (props) => {
   )
 }
 
-export default App
+export default connect(null, { initializeAnecdotes })(App)
