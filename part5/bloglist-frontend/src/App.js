@@ -4,12 +4,15 @@
 
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
-import Message from './components/Message'
+import Alert from './components/Alert'
 import Togglable from './components/Togglable'
 import NewBlogForm from './components/NewBlogForm'
 //import blogService from './services/blogs'
 import loginService from './services/login'
 import  { useField, useResource } from './hooks'
+import {
+  Container, Form, Button,
+  Grid, Segment, Divider } from 'semantic-ui-react'
 
 const App = () => {
   //const [blogs, setBlogs] = useState([])
@@ -25,7 +28,7 @@ const App = () => {
   const username = useField('text')
   const password = useField('password')
   const [user, setUser] = useState(null)
-  const [message, setMessage] = useState({})
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     blogService.getAll()
@@ -58,6 +61,10 @@ const App = () => {
         setUser(user)
         password.reset()
         username.reset()
+        setMessage({
+          text: `Welcome ${user.name}`,
+          type: 'success'
+        })
       } catch (exception) {
         setMessage({
           text: 'Log in error',
@@ -65,7 +72,7 @@ const App = () => {
         })
       }
       setTimeout(() => {
-        setMessage({})
+        setMessage(null)
       }, 5000)
     }
   }
@@ -106,15 +113,28 @@ const App = () => {
   }
 
   const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        Username <input name="username" {...username.bind}/>
-      </div>
-      <div>
-        Password<input name="password" {...password.bind}/>
-      </div>
-      <button type="submit">Login</button>
-    </form>
+    <Segment placeholder>
+      <h2>Log in</h2>
+      <Grid columns={2} relaxed='very'>
+        <Grid.Column>
+          <Form onSubmit={handleLogin}>
+            <Form.Field>
+              <label>Username</label>
+              <input name="username" {...username.bind}/>
+            </Form.Field>
+            <Form.Field>
+              <laberl>Password</laberl>
+              <input name="password" {...password.bind}/>
+            </Form.Field>
+            <Button type="submit">Login</Button>
+          </Form>
+        </Grid.Column>
+        <Grid.Column verticalAlign='middle'>
+          <Button content='Sign up' icon='signup' size='big' />
+        </Grid.Column>
+      </Grid>
+      <Divider vertical>Or</Divider>
+    </Segment>
   )
 
   const logOut = () => {
@@ -132,23 +152,23 @@ const App = () => {
 
   if (user === null) {
     return (
-      <div>
-        <h2>Log in</h2>
-        <Message text={message.text} type={message.type} />
+      <Container>
+        <h1>Bloglist</h1>
+        {message && <Alert text={message.text} type={message.type} />}
         {loginForm()}
-      </div>
+      </Container>
     )
   }
 
   return (
-    <div>
+    <Container>
       <h2>Bloglist</h2>
-      <Message text={message.text} type={message.type} />
-      <p>{user.name} logged in <button onClick={logOut}>Logout</button></p>
+      {message && <Alert text={message.text} type={message.type} />}
+      <p>{user.name} logged in <Button onClick={logOut}>Logout</Button></p>
       <p>
         Sort by:
-        <button onClick={sortLikes()}>Likes (asc)</button>
-        <button onClick={sortLikes(false)}>Likes (desc)</button>
+        <Button onClick={sortLikes()}>Likes (asc)</Button>
+        <Button onClick={sortLikes(false)}>Likes (desc)</Button>
       </p>
       <Togglable buttonLabel="Add note" ref={blogFormRef}>
         <NewBlogForm
@@ -164,7 +184,7 @@ const App = () => {
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} setBlogs={blogService} user={user} />
       )}
-    </div>
+    </Container>
   )
 }
 

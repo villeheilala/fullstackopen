@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Button, Form } from 'semantic-ui-react'
 
 const NewBlogForm = ({
   handleSubmit,
@@ -19,7 +20,7 @@ const NewBlogForm = ({
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit}>
       <div>
         Title:
         <input {...newBlogTitle.bind} />
@@ -32,8 +33,8 @@ const NewBlogForm = ({
         Url:
         <input {...newBlogUrl.bind}/>
       </div>
-      <button type="submit">Create</button>
-    </form >
+      <Button type="submit">Create</Button>
+    </Form >
   )
 }
 
