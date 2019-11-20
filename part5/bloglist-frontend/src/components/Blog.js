@@ -1,31 +1,33 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react'
-import blogService from '../services/blogs'
-import { Button, Label, Icon, List } from 'semantic-ui-react'
+import React, { useState } from 'react';
+import {
+  Button, Label, Icon, List,
+} from 'semantic-ui-react';
+import blogService from '../services/blogs';
 
 const Blog = ({ blog, setBlogs, user }) => {
-  const [showDetails, setShowDetails] = useState(false)
+  const [showDetails, setShowDetails] = useState(false);
 
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
     border: 'solid',
     borderWidth: 1,
-    marginBottom: 5
-  }
+    marginBottom: 5,
+  };
 
   const visible = { display: showDetails ? '' : 'none' }
 
   const toggleDetails = () => {
-    setShowDetails(!showDetails)
-  }
+    setShowDetails(!showDetails);
+  };
 
   const deleteBlog = async () => {
     if (window.confirm(`Delete ${blog.title}?`)) {
       await blogService.deleteBlog(blog.id)
-      blogService.getAll().then(blogs => setBlogs(blogs))
+      blogService.getAll().then((blogs) => setBlogs(blogs));
     }
-  }
+  };
 
   const like = async () => {
     const object = {
@@ -34,11 +36,11 @@ const Blog = ({ blog, setBlogs, user }) => {
       likes: blog.likes + 1,
       author: blog.author,
       title: blog.title,
-      url: blog.url
-    }
-    await blogService.update(object)
-    blog.likes += 1
-  }
+      url: blog.url,
+    };
+    await blogService.update(object);
+    blog.likes += 1;
+  };
 
   const deletable = { display: blog.user.username === user.username ? '' : 'none' }
 

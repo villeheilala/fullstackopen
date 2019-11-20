@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
-import React from 'react'
-import PropTypes from 'prop-types'
-import { Button, Form } from 'semantic-ui-react'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Button, Form } from 'semantic-ui-react';
 
 const NewBlogForm = ({
   handleSubmit,
@@ -17,7 +17,7 @@ const NewBlogForm = ({
     //handleNewTitleChange: PropTypes.func.isRequired,
     //handleNewAuthorChange: PropTypes.func.isRequired,
     //handleNewUrlChange: PropTypes.func.isRequired
-  }
+  };
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -38,4 +38,4 @@ const NewBlogForm = ({
   )
 }
 
-export default NewBlogForm
+export default NewBlogForm;

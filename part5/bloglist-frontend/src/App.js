@@ -16,7 +16,7 @@ import Blog from './components/Blog';
 import Alert from './components/Alert';
 import Togglable from './components/Togglable';
 import NewBlogForm from './components/NewBlogForm';
-// import blogService from './services/blogs'
+// import blogService from './services/blogs';
 import loginService from './services/login';
 import { useField, useResource } from './hooks';
 
@@ -61,7 +61,7 @@ const App = () => {
       setUser(user);
       blogService.setToken(user.token);
     }
-  });
+  }, []);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -139,7 +139,7 @@ const App = () => {
               <input name="username" {...username.bind} />
             </Form.Field>
             <Form.Field>
-              <laberl>Password</laberl>
+              <label>Password</label>
               <input name="password" {...password.bind} />
             </Form.Field>
             <Button type="submit">Login</Button>
@@ -158,7 +158,7 @@ const App = () => {
     window.location.reload();
   };
 
-  const sortLikes = (asc = true) => () => (
+  const byLikes = (asc = true) => () => (
     asc
       // setBlogs(blogs.sort((a, b) => a.likes - b.likes)) :
       // setBlogs(blogs.sort((a, b) => b.likes - a.likes))
@@ -194,8 +194,8 @@ const App = () => {
         </p>
         <p>
           Sort by:
-          <Button onClick={sortLikes()}>Likes (asc)</Button>
-          <Button onClick={sortLikes(false)}>Likes (desc)</Button>
+          <Button onClick={byLikes()}>Likes (asc)</Button>
+          <Button onClick={byLikes(false)}>Likes (desc)</Button>
         </p>
         <Togglable buttonLabel="Add note" ref={blogFormRef}>
           <NewBlogForm
@@ -208,7 +208,7 @@ const App = () => {
             handleSubmit={handleCreate}
           />
         </Togglable>
-        {blogs.map((blog) => <Blog key={blog.id} blog={blog} setBlogs={blogService} user={user} />)}
+        {blogs.sort(byLikes).map((blog) => <Blog key={blog.id} blog={blog} setBlogs={blogService} user={user} />)}
       </Container>
       <Footer>
           Heilala 2019

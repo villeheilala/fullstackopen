@@ -1,54 +1,67 @@
-/* eslint-disable no-unused-vars */
-import axios from 'axios'
-import { useState } from 'react'
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 
 export const useField = (type) => {
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState('');
 
   const onChange = (event) => {
-    setValue(event.target.value)
-  }
+    setValue(event.target.value);
+  };
+
+  const reset = () => {
+    setValue('');
+  };
 
   return {
     bind: {
       type,
       value,
-      onChange
+      onChange,
+      reset,
     },
     reset: () => setValue(''),
-    value
-  }
-}
+    value,
+  };
+};
 
 export const useResource = (baseUrl) => {
-  // eslint-disable-next-line no-unused-vars
-  const [resources, setResources] = useState([])
+  const [resources, setResources] = useState([]);
 
-  let token = null
+  let token = null;
 
-  const setToken = newToken => {
-    token = `bearer ${newToken}`
-  }
+  useEffect(() => {
+    axios.get(baseUrl).then((response) => {
+      setResources(response.data);
+    });
+  }, []);
+
+  const getConfig = () => ({
+    headers: { Authorization: token },
+  });
+
+  const setToken = (newToken) => {
+    token = `bearer ${newToken}`;
+  };
 
   const create = async (resource) => {
     const config = {
-      headers: { Authorization: token }
-    }
+      headers: { Authorization: token },
+    };
 
-    const response = await axios.post(baseUrl, resource, config)
-    return response.data
-  }
+    const response = await axios.post(baseUrl, resource, config);
+    return response.data;
+  };
 
   const getAll = () => {
-    const request = axios.get(baseUrl)
-    request.then(response => setResources(response.data))
-  }
+    const request = axios.get(baseUrl);
+    request.then((response) => setResources(response.data));
+  };
 
   const service = {
-    create, setToken, getAll
-  }
+    create, setToken, getAll,
+  };
 
   return [
-    resources, service
-  ]
-}
+    resources, service,
+  ];
+};
