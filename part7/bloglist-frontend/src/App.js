@@ -6,15 +6,14 @@ import NewBlog from './components/NewBlog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { useField } from './hooks'
+import { clearNotification, setNotification } from './actions'
+import { connect } from "react-redux";
 
-const App = () => {
+const App = ({ setNotification, clearNotification }) => {
   const [username] = useField('text')
   const [password] = useField('password')
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [notification, setNotification] = useState({
-    message: null
-  })
 
   useEffect(() => {
     blogService.getAll().then(blogs => {
@@ -32,8 +31,8 @@ const App = () => {
   }, [])
 
   const notify = (message, type = 'success') => {
-    setNotification({ message, type })
-    setTimeout(() => setNotification({ message: null }), 10000)
+    setNotification(type, message)
+    setTimeout(() => clearNotification(), 10000)
   }
 
   const handleLogin = async (event) => {
@@ -86,7 +85,7 @@ const App = () => {
       <div>
         <h2>log in to application</h2>
 
-        <Notification notification={notification} />
+        <Notification />
 
         <form onSubmit={handleLogin}>
           <div>
@@ -111,7 +110,7 @@ const App = () => {
     <div>
       <h2>blogs</h2>
 
-      <Notification notification={notification} />
+      <Notification />
 
       <p>{user.name} logged in</p>
       <button onClick={handleLogout}>logout</button>
@@ -134,4 +133,9 @@ const App = () => {
   )
 }
 
-export default App
+export default connect(
+  null,
+  {
+    clearNotification,
+    setNotification,
+  })(App)
