@@ -6,18 +6,33 @@ import NewBlog from './components/NewBlog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { useField } from './hooks'
-import { clearNotification, setNotification } from './actions'
+import { clearNotification, setNotification, setBlogs } from './actions'
 import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  BrowserRouter as Router,
+  Route, Link, Redirect, withRouter
+} from 'react-router-dom'
+
+const Blogs = () => (
+  <div> <h2>Blogs</h2> </div>
+)
+
+const User = () => (
+  <div> <h2>User</h2> </div>
+)
 
 const App = ({ setNotification, clearNotification }) => {
   const [username] = useField('text')
   const [password] = useField('password')
-  const [blogs, setBlogs] = useState([])
+  const blogs = useSelector(state => state.blogs);
   const [user, setUser] = useState(null)
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     blogService.getAll().then(blogs => {
-      setBlogs(blogs)
+      dispatch(setBlogs(blogs))
     })
   }, [])
 
@@ -60,14 +75,14 @@ const App = ({ setNotification, clearNotification }) => {
   const createBlog = async (blog) => {
     const createdBlog = await blogService.create(blog)
     newBlogRef.current.toggleVisibility()
-    setBlogs(blogs.concat(createdBlog))
+    dispatch(setBlogs(blogs.concat(createdBlog)))
     notify(`a new blog ${createdBlog.title} by ${createdBlog.author} added`)
   }
 
   const likeBlog = async (blog) => {
-    const likedBlog = { ...blog, likes: blog.likes + 1}
+    const likedBlog = { ...blog, likes: blog.likes + 1 }
     const updatedBlog = await blogService.update(likedBlog)
-    setBlogs(blogs.map(b => b.id === blog.id ? updatedBlog : b))
+    dispatch(setBlogs(blogs.map(b => b.id === blog.id ? updatedBlog : b)))
     notify(`blog ${updatedBlog.title} by ${updatedBlog.author} liked!`)
   }
 
@@ -75,7 +90,7 @@ const App = ({ setNotification, clearNotification }) => {
     const ok = window.confirm(`remove blog ${blog.title} by ${blog.author}`)
     if (ok) {
       const updatedBlog = await blogService.remove(blog)
-      setBlogs(blogs.filter(b => b.id !== blog.id))
+      dispatch(setBlogs(blogs.filter(b => b.id !== blog.id)))
       notify(`blog ${updatedBlog.title} by ${updatedBlog.author} removed!`)
     }
   }
@@ -90,7 +105,7 @@ const App = ({ setNotification, clearNotification }) => {
         <form onSubmit={handleLogin}>
           <div>
             käyttäjätunnus
-            <input {...username}/>
+            <input {...username} />
           </div>
           <div>
             salasana
@@ -106,9 +121,22 @@ const App = ({ setNotification, clearNotification }) => {
 
   const byLikes = (b1, b2) => b2.likes - b1.likes
 
+  const padding = { padding: 5 }
+
   return (
     <div>
-      <h2>blogs</h2>
+      <div>
+        <Router>
+          <div>
+            <div>
+              <Link style={padding} to="/">Blogs</Link>
+              <Link style={padding} to="/users">User</Link>
+            </div>
+            <Route path="/" render={() => <Blogs />} />
+            <Route path="/users" render={() => <User />} />
+          </div>
+        </Router>
+      </div>
 
       <Notification />
 
