@@ -1,31 +1,20 @@
-import React, { useState, useEffect } from 'react'
-import Blog from './components/Blog'
+import React, { useEffect } from 'react'
 import blogService from './services/blogs'
 import loginService from './services/login'
-import NewBlog from './components/NewBlog'
 import Notification from './components/Notification'
-import Togglable from './components/Togglable'
+import Blogs from './containers/Blogs'
+import Users from './containers/Users'
 import { useField } from './hooks'
-import { clearNotification, setNotification, setBlogs, setUser } from './actions'
-import { connect } from "react-redux";
+import { setBlogs, setUser, setNotification, clearNotification } from './actions'
 import { useDispatch, useSelector } from "react-redux";
 import {
   BrowserRouter as Router,
   Route, Link, Redirect, withRouter
 } from 'react-router-dom'
 
-const Blogs = () => (
-  <div> <h2>Blogs</h2> </div>
-)
-
-const User = () => (
-  <div> <h2>User</h2> </div>
-)
-
-const App = ({ setNotification, clearNotification }) => {
+const App = () => {
   const [username] = useField('text')
   const [password] = useField('password')
-  const blogs = useSelector(state => state.blogs);
   const user = useSelector(state => state.user);
 
   const dispatch = useDispatch();
@@ -46,8 +35,8 @@ const App = ({ setNotification, clearNotification }) => {
   }, [dispatch])
 
   const notify = (message, type = 'success') => {
-    setNotification(type, message)
-    setTimeout(() => clearNotification(), 10000)
+    dispatch(setNotification(type, message))
+    setTimeout(() => dispatch(clearNotification()), 10000)
   }
 
   const handleLogin = async (event) => {
@@ -55,9 +44,8 @@ const App = ({ setNotification, clearNotification }) => {
     try {
       const user = await loginService.login({
         username: username.value,
-        password: password.value
+        password: password.value,
       })
-
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
       blogService.setToken(user.token)
       dispatch(setUser(user));
@@ -70,29 +58,6 @@ const App = ({ setNotification, clearNotification }) => {
     dispatch(setUser(null));
     blogService.destroyToken()
     window.localStorage.removeItem('loggedBlogAppUser')
-  }
-
-  const createBlog = async (blog) => {
-    const createdBlog = await blogService.create(blog)
-    newBlogRef.current.toggleVisibility()
-    dispatch(setBlogs(blogs.concat(createdBlog)))
-    notify(`a new blog ${createdBlog.title} by ${createdBlog.author} added`)
-  }
-
-  const likeBlog = async (blog) => {
-    const likedBlog = { ...blog, likes: blog.likes + 1 }
-    const updatedBlog = await blogService.update(likedBlog)
-    dispatch(setBlogs(blogs.map(b => b.id === blog.id ? updatedBlog : b)))
-    notify(`blog ${updatedBlog.title} by ${updatedBlog.author} liked!`)
-  }
-
-  const removeBlog = async (blog) => {
-    const ok = window.confirm(`remove blog ${blog.title} by ${blog.author}`)
-    if (ok) {
-      const updatedBlog = await blogService.remove(blog)
-      dispatch(setBlogs(blogs.filter(b => b.id !== blog.id)))
-      notify(`blog ${updatedBlog.title} by ${updatedBlog.author} removed!`)
-    }
   }
 
   if (user === null) {
@@ -117,10 +82,6 @@ const App = ({ setNotification, clearNotification }) => {
     )
   }
 
-  const newBlogRef = React.createRef()
-
-  const byLikes = (b1, b2) => b2.likes - b1.likes
-
   const padding = { padding: 5 }
 
   return (
@@ -129,41 +90,22 @@ const App = ({ setNotification, clearNotification }) => {
         <Router>
           <div>
             <div>
-              <Link style={padding} to="/">Blogs</Link>
+              <Link style={padding} to="/blogs">Blogs</Link>
               <Link style={padding} to="/users">User</Link>
+              {user ? <em>{user.name} logged in</em> : null}
+              <button onClick={handleLogout}>logout</button>
             </div>
-            <Route path="/" render={() => <Blogs />} />
-            <Route path="/users" render={() => <User />} />
+
+            <Notification />
+
+            <Route path="/blogs" render={() => <Blogs />} />
+            <Route path="/users" render={() => <Users />} />
           </div>
         </Router>
       </div>
 
-      <Notification />
-
-      <p>{user.name} logged in</p>
-      <button onClick={handleLogout}>logout</button>
-
-      <Togglable buttonLabel='create new' ref={newBlogRef}>
-        <NewBlog createBlog={createBlog} />
-      </Togglable>
-
-      {blogs.sort(byLikes).map(blog =>
-        <Blog
-          key={blog.id}
-          blog={blog}
-          like={likeBlog}
-          remove={removeBlog}
-          user={user}
-          creator={blog.user.username === user.username}
-        />
-      )}
     </div>
   )
 }
 
-export default connect(
-  null,
-  {
-    clearNotification,
-    setNotification,
-  })(App)
+export default App

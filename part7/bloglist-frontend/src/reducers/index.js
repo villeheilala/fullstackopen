@@ -3,10 +3,12 @@ import {
   CLEAR_NOTIFICATION,
   SET_BLOGS,
   SET_USER,
+  SET_USERS,
 } from '../actions';
 
 const initialState = {
   user: null,
+  users: [],
   blogs: [],
   notification: {
     type: null,
@@ -41,6 +43,11 @@ const rootReducer = (state = initialState, action) => {
           return {
             ...state,
             user: action.payload.user,
+          }
+        case SET_USERS:
+          return {
+            ...state,
+            users: action.payload.users,
           }
       default:
           return state

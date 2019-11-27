@@ -6,6 +6,7 @@
  export const CLEAR_NOTIFICATION = 'CLEAR_NOTIFICATION';
  export const SET_BLOGS = 'SET_BLOGS';
  export const SET_USER = 'SET_USER';
+ export const SET_USERS = 'SET_USERS';
 
 /*
  * action creators
@@ -28,4 +29,9 @@ export const setBlogs = (blogs) => ({
 export const setUser = (user) => ({
   type: SET_USER,
   payload: { user },
+})
+
+export const setUsers = (users) => ({
+  type: SET_USERS,
+  payload: { users },
 })
