@@ -5,6 +5,7 @@
  export const SET_NOTIFICATION = 'SET_NOTIFICATION';
  export const CLEAR_NOTIFICATION = 'CLEAR_NOTIFICATION';
  export const SET_BLOGS = 'SET_BLOGS';
+ export const SET_USER = 'SET_USER';
 
 /*
  * action creators
@@ -22,4 +23,9 @@ export const clearNotification = () => ({
 export const setBlogs = (blogs) => ({
   type: SET_BLOGS,
   payload: { blogs },
+})
+
+export const setUser = (user) => ({
+  type: SET_USER,
+  payload: { user },
 })

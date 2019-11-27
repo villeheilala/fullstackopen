@@ -6,7 +6,7 @@ import NewBlog from './components/NewBlog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { useField } from './hooks'
-import { clearNotification, setNotification, setBlogs } from './actions'
+import { clearNotification, setNotification, setBlogs, setUser } from './actions'
 import { connect } from "react-redux";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -26,7 +26,7 @@ const App = ({ setNotification, clearNotification }) => {
   const [username] = useField('text')
   const [password] = useField('password')
   const blogs = useSelector(state => state.blogs);
-  const [user, setUser] = useState(null)
+  const user = useSelector(state => state.user);
 
   const dispatch = useDispatch();
 
@@ -34,16 +34,16 @@ const App = ({ setNotification, clearNotification }) => {
     blogService.getAll().then(blogs => {
       dispatch(setBlogs(blogs))
     })
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      dispatch(setUser(user));
       blogService.setToken(user.token)
     }
-  }, [])
+  }, [dispatch])
 
   const notify = (message, type = 'success') => {
     setNotification(type, message)
@@ -60,14 +60,14 @@ const App = ({ setNotification, clearNotification }) => {
 
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
       blogService.setToken(user.token)
-      setUser(user)
+      dispatch(setUser(user));
     } catch (exception) {
       notify('wrong username of password', 'error')
     }
   }
 
   const handleLogout = () => {
-    setUser(null)
+    dispatch(setUser(null));
     blogService.destroyToken()
     window.localStorage.removeItem('loggedBlogAppUser')
   }
