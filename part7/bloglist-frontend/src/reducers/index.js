@@ -14,44 +14,44 @@ const initialState = {
     type: null,
     message: null,
   },
-}
+};
 
 const rootReducer = (state = initialState, action) => {
   switch (action.type) {
-      case SET_NOTIFICATION:
-          return {
-              ...state,
-              notification: {
-                  type: action.payload.type,
-                  message: action.payload.message,
-              },
-          }
-      case CLEAR_NOTIFICATION:
-          return {
-              ...state,
-              notification: {
-                  type: null,
-                  message: null,
-              },
-          }
-      case SET_BLOGS:
-        return {
-          ...state,
-          blogs: action.payload.blogs,
-        }
-        case SET_USER:
-          return {
-            ...state,
-            user: action.payload.user,
-          }
-        case SET_USERS:
-          return {
-            ...state,
-            users: action.payload.users,
-          }
-      default:
-          return state
+    case SET_NOTIFICATION:
+      return {
+        ...state,
+        notification: {
+          type: action.payload.type,
+          message: action.payload.message,
+        },
+      };
+    case CLEAR_NOTIFICATION:
+      return {
+        ...state,
+        notification: {
+          type: null,
+          message: null,
+        },
+      };
+    case SET_BLOGS:
+      return {
+        ...state,
+        blogs: action.payload.blogs,
+      };
+    case SET_USER:
+      return {
+        ...state,
+        user: action.payload.user,
+      };
+    case SET_USERS:
+      return {
+        ...state,
+        users: action.payload.users,
+      };
+    default:
+      return state;
   }
-}
+};
 
-export default rootReducer
+export default rootReducer;
