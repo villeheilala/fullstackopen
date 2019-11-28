@@ -36,3 +36,10 @@
 
 * [6.1-6.2](part6/unicafe-redux)
 * [6.3-6.21](part6/redux-anecdotes)
+
+## Part 7 Assignments
+
+* [7.1-7.3](part7/routed-anecdotes)
+* [7.4-7.8, 7.10, 7.15, 7.17](part7/bloglist-frontend)
+* [7.13-7.14](part5/bloglist-frontend)
+* 7.20
