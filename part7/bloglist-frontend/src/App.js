@@ -11,6 +11,7 @@ import {
   BrowserRouter as Router,
   Route, Link, Redirect, withRouter
 } from 'react-router-dom'
+import UserDetails from './components/UserDetails'
 
 const App = () => {
   const [username] = useField('text')
@@ -99,7 +100,10 @@ const App = () => {
             <Notification />
 
             <Route path="/blogs" render={() => <Blogs />} />
-            <Route path="/users" render={() => <Users />} />
+            <Route exact path="/users" render={() => <Users />} />
+            <Route exact path="/users/:id" render={( { match }) =>
+              <UserDetails id={match.params.id} />
+            } />
           </div>
         </Router>
       </div>
