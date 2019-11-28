@@ -13,7 +13,7 @@ const UserDetails = ({ id }) => {
 
   return (
     <div>
-      <h2>Blogs</h2>
+      <h2>Blogs by user</h2>
       <h3>{user.name}</h3>
       <h4>Added blogs</h4>
       <ul>

@@ -85,12 +85,14 @@ const App = () => {
 
   const padding = { padding: 5 }
 
+  const navigation = { background: '#FF2'}
+
   return (
     <div>
       <div>
         <Router>
           <div>
-            <div>
+            <div style={navigation}>
               <Link style={padding} to="/blogs">Blogs</Link>
               <Link style={padding} to="/users">User</Link>
               {user ? <em>{user.name} logged in</em> : null}
