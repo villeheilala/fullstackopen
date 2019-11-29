@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Authors = ({ result, editBirthYear }) => {
+const Authors = ({ result, editBirthYear, token }) => {
   const [author, setAuthor] = useState('')
   const [born, setBorn] = useState('')
 //  if (!show) {
@@ -45,6 +45,7 @@ const Authors = ({ result, editBirthYear }) => {
           )}
         </tbody>
       </table>
+      {token ? <div>
       <h2>set birthyear</h2>
       <form onSubmit={updateAuthor}>
       <select onChange={({ target }) => setAuthor(target.value)}>
@@ -65,7 +66,7 @@ const Authors = ({ result, editBirthYear }) => {
         />
       </div>
       <button type='submit'>update author</button>
-      </form>
+      </form></div> : null}
     </div>
   )
 }

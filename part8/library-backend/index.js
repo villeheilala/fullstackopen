@@ -1,9 +1,9 @@
 const { ApolloServer, UserInputError, AuthenticationError, gql } = require('apollo-server')
 const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
-const uuid = require('uuid/v1')
 const Book = require('./models/book')
 const Author = require('./models/author')
+const User = require('./models/user')
 
 const JWT_SECRET = 'NEED_HERE_A_SECRET_KEY'
 
@@ -119,7 +119,7 @@ const resolvers = {
   Mutation: {
     addBook: async (_, args, context) => {
       if (!context.currentUser) {
-        throw new AuthenticationError('Not euthenticated')
+        throw new AuthenticationError('Not authenticated')
       }
       let author = await Author.findOne({ name: args.author })
       if (!author) {
@@ -138,7 +138,7 @@ const resolvers = {
     },
     editAuthor: async (_, args, context) => {
       if (!context.currentUser) {
-        throw new AuthenticationError('Not euthenticated')
+        throw new AuthenticationError('Not authenticated')
       }
       const author = await Author.findOne({ name: args.name })
       if (!author) return null
@@ -170,7 +170,7 @@ const resolvers = {
         username: user.username,
         id: user._id,
       }
-      return { value: jwt.sign(userForToken, JWT_SECRET)}
+      return { value: jwt.sign(userForToken, JWT_SECRET) }
     },
   },
 }
