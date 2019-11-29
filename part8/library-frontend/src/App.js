@@ -20,7 +20,10 @@ const GET_ALL_BOOKS = gql`
 query getAllBooks{
   allBooks  {
     title
-    author
+    author {
+      name
+      born
+    }
     published
     id
   }
@@ -28,15 +31,17 @@ query getAllBooks{
 `
 
 const CREATE_BOOK = gql`
-mutation createBook($title: String!, $author: String, $published: Int, $genres: [String]) {
+mutation createBook($title: String!, $author: String!, $published: Int, $genres: [String]) {
   addBook(
     title: $title,
     author: $author,
     published: $published,
-    genres: $genres
+    genres: $genres,
   ) {
     title
-    author
+    author {
+      name
+    }
     published
     genres
     id
@@ -46,7 +51,10 @@ mutation createBook($title: String!, $author: String, $published: Int, $genres: 
 
 const EDIT_BIRTHYEAR = gql`
 mutation editBirthyear($author: String!, $born: Int!) {
-  editAuthor(name: $author, setBornTo: $born)  {
+  editAuthor(
+    name: $author,
+    setBornTo: $born
+  ) {
     name
     born
   }

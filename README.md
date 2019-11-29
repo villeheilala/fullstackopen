@@ -43,3 +43,7 @@
 * [7.4-7.8, 7.10, 7.15, 7.17](part7/bloglist-frontend)
 * [7.13-7.14](part5/bloglist-frontend)
 * 7.20
+
+## Part 8 Assignments
+
+* [8.1-](part8/)
