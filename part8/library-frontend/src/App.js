@@ -26,6 +26,7 @@ query getAllBooks{
       born
     }
     published
+    genres
     id
   }
 }
