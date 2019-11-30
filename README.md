@@ -1,5 +1,7 @@
 # fullstackopen
 
+My coursework for Fullstack Developer Course 2019, 8 ETCS
+
 ## Part 0 Assignments
 
 * [0.3](/part0/t0-3.png)
@@ -46,4 +48,4 @@
 
 ## Part 8 Assignments
 
-* [8.1-](part8/)
+* [8.1-8.20, 8.23, 8.24](part8/)
