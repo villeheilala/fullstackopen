@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import jwt from 'jsonwebtoken';
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
@@ -65,7 +66,7 @@ mutation editBirthyear($author: String!, $born: Int!) {
 
 const LOGIN = gql`
   mutation login($username: String!, $password: String!) {
-    login(username: $username, password: $password)  {
+    login(username: $username, password: $password) {
       value
     }
   }
@@ -118,6 +119,7 @@ const App = () => {
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
         {token ? <button onClick={() => setPage('add')}>add book</button> : null}
+        {token ? <button onClick={() => setPage('recommend')}>recommend</button> : null}
         {!token ? <button onClick={() => setPage('login')}>login</button> : null}
         {token ? <button onClick={() => logout()}>logout</button> : null}
       </div>
@@ -127,6 +129,8 @@ const App = () => {
       {(page === 'authors') ? <Authors result={authors} editBirthYear={editBirthYear} token={token}/> : null}
 
       {(page === 'books') ? <Books result={books} /> : null}
+
+      {(page === 'recommend') ? <Books result={books} genre={jwt.decode(token).favoriteGenre} /> : null}
 
       {(page === 'add') ? <NewBook addBook={addBook} /> : null}
 
