@@ -5,7 +5,7 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
 import { gql } from 'apollo-boost'
-import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks'
+import { useQuery, useMutation, useSubscription, useApolloClient } from '@apollo/react-hooks'
 
 const GET_ALL_AUTHORS = gql`
 query getAllAuthors{
@@ -72,6 +72,29 @@ const LOGIN = gql`
   }
 `
 
+const BOOK_DETAILS = gql`
+fragment BookDetails on Book {
+  title
+  author {
+    name
+    born
+  }
+  published
+  genres
+  id
+}
+`
+
+const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      ...BookDetails
+    }
+  }
+  
+${BOOK_DETAILS}
+`
+
 const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [page, setPage] = useState('authors')
@@ -79,6 +102,12 @@ const App = () => {
   const authors = useQuery(GET_ALL_AUTHORS)
   const books = useQuery(GET_ALL_BOOKS)
   const client = useApolloClient()
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      window.alert('New book added!')
+    }
+  })
 
   const handleError = (error) => {
     setErrorMessage(error.graphQLErrors[0].message)
