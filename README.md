@@ -1,6 +1,10 @@
 # fullstackopen
 
-My coursework for Fullstack Developer Course 2019, 8 ETCS
+My coursework for Fullstack Developer Course 2019 @ University of Helsinki, 8 ETCS, Grade 5/5
+
+Modern web development with JS, Node, React, MongoDB, REST & GraphQL
+
+[Certificate of Completion](https://studies.cs.helsinki.fi/fullstackopen2019/certificate/en/a8d71336b14daa2361b7046ec1de4072)
 
 ## Part 0 Assignments
 
